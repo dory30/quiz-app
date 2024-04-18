@@ -95,3 +95,28 @@
 .result-screen button:hover {
   opacity: 0.8;
 }
+
+.correct {
+  background-color: lightgreen;
+}
+
+.incorrect {
+  background-color: lightcoral;
+}
+
+.correct-answer {
+  background-color: lightgreen;
+  color: white;
+}
+
+.option-button:disabled {
+  background-color: #ccc;
+}
+
+.option-button.correct {
+  background-color: #4CAF50; /* Vert pour correct */
+}
+
+.option-button.incorrect {
+  background-color: #f44336; /* Rouge pour incorrect */
+}

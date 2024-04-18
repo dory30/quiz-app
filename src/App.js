@@ -7,7 +7,10 @@ function App() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [selectedOption, setSelectedOption] = useState("");
-  const [showScore, setShowScore] = useState ("false");
+  const [showScore, setShowScore] = useState (false);
+  const [isAnswered, setIsAnswered] = useState(false);
+  const [isCorrect, setIsCorrect] = useState(false);
+  
 
   const retryQuiz = () => {
     // Réinitialiser l'état du quiz
@@ -17,20 +20,25 @@ function App() {
   };
 
   const handleOptionClick = (option) => {
+    const isAnswerCorrect = option === quizData[currentQuestionIndex].answer;
     setSelectedOption(option);
-    // Logique pour la réponse sera ajoutée ici
+    setIsAnswered(true);
+    setIsCorrect(isAnswerCorrect);
+    if (isAnswerCorrect) {
+      setScore(score + 1);
+    }
   };
 
   const handleSubmitClick = () => {
-    if (selectedOption === quizData[currentQuestionIndex].answer) {
-      setScore(score + 1);
-    }
-    if (currentQuestionIndex < quizData.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    if (!isAnswered) return; // Ajoutez une logique pour empêcher de passer à la prochaine question sans réponse
+    
+    const nextQuestionIndex = currentQuestionIndex + 1;
+    if (nextQuestionIndex < quizData.length) {
+      setCurrentQuestionIndex(nextQuestionIndex);
     } else {
-      // Afficher le score final
+      setShowScore(true);
     }
-    setSelectedOption(""); // Réinitialiser l'option sélectionnée pour la prochaine question
+    setIsAnswered(false); // Réinitialiser pour la prochaine question
   };
 
   return (
@@ -52,8 +60,9 @@ function App() {
           {quizData[currentQuestionIndex].options.map((option, index) => (
             <button
               key={index}
-              className={`option-button ${selectedOption === option ? "selected" : ""}`}
+              className={`option-button ${selectedOption === option ? (isCorrect ? "correct" : "incorrect") : ""}`}
               onClick={() => handleOptionClick(option)}
+              disabled={isAnswered}
             >
               {option}
             </button>
