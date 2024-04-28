@@ -109,6 +109,15 @@
   color: white;
 }
 
+@keyframes blink {
+  0%, 100% { background-color: transparent; }
+  50% { background-color: lightgreen; }
+}
+
+.correct-answer-blink {
+  animation: blink 1s linear infinite;
+}
+
 .option-button:disabled {
   background-color: #ccc;
 }
@@ -120,3 +129,4 @@
 .option-button.incorrect {
   background-color: #f44336; /* Rouge pour incorrect */
 }
+
