@@ -1,9 +1,8 @@
-// src/ResultScreen.js
 import React from 'react';
 
 const ResultScreen = ({ score, questions, onRetry }) => {
   const scorePercentage = (score / questions.length) * 100;
-  const passed = scorePercentage >= 50; // Définit le seuil de réussite à 50%, ajustez selon vos critères
+  const passed = scorePercentage >= 50; // 50% passing score
   const emoji = passed ? '🎉' : '😢';
 
   return (

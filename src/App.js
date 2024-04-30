@@ -1,50 +1,80 @@
 import React, { useState } from 'react';
 import ResultScreen from './ResultScreen';
 import quizData from './quizData';
-import './App.css'; // Assurez-vous de créer un fichier App.css pour le style
+import './App.css';
 
 function App() {
+
+  // Define state variables
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
   const [showScore, setShowScore] = useState(false);
   const [isAnswered, setIsAnswered] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
-  const [isAnswerCorrect, setIsAnswerCorrect] = useState(null);
 
+  // Function  to shuffle an array
+  function shuffle(array) {
+    let currentIndex = array.length, temporaryValue, randomIndex;
+
+    // As long as there are still elements to mix...
+    while (0 !== currentIndex) {
+
+      // Select a remaining item...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+
+      // And exchange it with the current element.
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+
+    return array;
+  }
 
   const retryQuiz = () => {
-    // Réinitialiser l'état du quiz
+    // Reset quiz status
     setScore(0);
     setCurrentQuestionIndex(0);
     setShowScore(false);
+    setIsAnswered(false);
+    setSelectedOption(null);
+    setIsCorrect(false);
+
+    // Mix up the questions
+    const shuffledQuizData = shuffle(quizData);
+
+    // Mix options for each question
+    shuffledQuizData.forEach(question => {
+      question.options = shuffle(question.options);
+    });
   };
 
   const handleOptionClick = (option) => {
-    const isAnswerCorrect = option === quizData[currentQuestionIndex].answer;
+    const correct = option === quizData[currentQuestionIndex].answer;
     setSelectedOption(option);
     setIsAnswered(true);
-    setIsCorrect(isAnswerCorrect);
-    //if (isAnswerCorrect) {
-    // setScore(score + 1);
-    //}
+    setIsCorrect(correct);
+    if (correct) {
+      setScore(score + 1);
+    }
   };
 
   const handleSubmitClick = () => {
-
     if (!isCorrect) {
-      setTimeout(() => {
-        if (currentQuestionIndex < quizData.length - 1) {
-          setCurrentQuestionIndex(currentQuestionIndex + 1);
-          setIsAnswered(false);
-          setSelectedOption("");
-          setIsCorrect(null);
-        } else {
-          setShowScore(true);
-        }
-      }, 2000); // Attendre 2 secondes
-    } else {
-      // Si la réponse est correcte, passez immédiatement à la prochaine question
+      if (currentQuestionIndex < quizData.length - 1) {
+        setCurrentQuestionIndex(currentQuestionIndex + 1);
+        setIsAnswered(false);
+        setSelectedOption("");
+        setIsCorrect(null);
+      }
+      else {
+        setShowScore(true);
+      }
+    }
+    else {
+      // If the answer is correct, move on to the next question.
       if (currentQuestionIndex < quizData.length - 1) {
         setCurrentQuestionIndex(currentQuestionIndex + 1);
         setIsAnswered(false);
@@ -55,10 +85,10 @@ function App() {
       }
     }
 
-   };
+  };
 
 
-  
+
   return (
     <div className="App">
       {showScore ? (
@@ -80,8 +110,8 @@ function App() {
               <button
                 key={index}
                 className={`option-button 
-        ${selectedOption === option ? (isAnswerCorrect ? "correct" : "incorrect") : ""}
-        ${isAnswerCorrect === false && quizData[currentQuestionIndex].answer === option ? "correct-answer-blink" : ""}`}
+        ${selectedOption === option ? (isCorrect ? "correct" : "incorrect") : ""}
+        ${isAnswered && !isCorrect && quizData[currentQuestionIndex].answer === option ? "correct-answer-blink" : ""}`}
                 onClick={() => handleOptionClick(option)}
                 disabled={isAnswered}
               >
