@@ -132,7 +132,7 @@
 }
 
 .result-screen button {
-  background-color: #4CAF50;  /* Green for success, change color for failure */
+  background-color: #5e35b1;  /* Green for success, change color for failure */
   color: white;
   padding: 10px 20px;
   border: none;
@@ -144,7 +144,7 @@
 
 .result-screen button:hover {
   opacity: 0.8;
-  background-color: #388e3c; /* Darker green when hovered over */
+  background-color:  #5e35b1;
 }
 
 .correct {
